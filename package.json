@@ -1,9 +1,16 @@
 {
   "name": "electron-app",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "license": "MIT",
   "devDependencies": {
     "electron": "^29.1.1"
+  },
+  "dependencies": {
+    "axios": "^1.6.7"
   }
 }
