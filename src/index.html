@@ -2,7 +2,6 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
         <meta
                 http-equiv="Content-Security-Policy"
                 content="default-src 'self'; script-src 'self'"
@@ -11,10 +10,16 @@
                 http-equiv="X-Content-Security-Policy"
                 content="default-src 'self'; script-src 'self'"
         />
+        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+        
         <title>Hello from Electron renderer!</title>
     </head>
     <body>
-        <h1>Hello from Electron renderer!</h1>
-        <p>👋</p>
+        <button class="router" data-route="unit_show">Show Unit</button>
+        <button class="router" data-route="unit_index">List Units</button>
+
+        <div id="content"></div>
     </body>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./renderer/routes.js"></script>
 </html>
