@@ -15,10 +15,28 @@
         <title>Hello from Electron renderer!</title>
     </head>
     <body>
-        <button class="router" data-route="unit_show">Show Unit</button>
-        <button class="router" data-route="unit_index">List Units</button>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <ul class="navbar-nav me-auto mb-2">
+                    <li class="nav-item">
+                        <button class="router nav-link" data-route="locations">Locations</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="router nav-link" data-route="users">Users</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="router nav-link" data-route="orders">Orders</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="router nav-link" data-route="logs">Logs</button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container mt-5">
+            <div id="content"></div>
 
-        <div id="content"></div>
+        </div>
     </body>
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="./renderer/routes.js"></script>

@@ -4,8 +4,12 @@ const { getAPIUserData } = require('./api/API');
 
 
 const allowedRoutes = {
-    'unit_show': 'unit/show.html',
-    'unit_index': 'unit/index.html',
+    'location': 'locations/show.html',
+    'locations': 'locations/index.html',
+    'order': 'orders/show.html',
+    'orders': 'orders/index.html',
+    'user': 'users/show.html',
+    'users': 'users/index.html',
 };
 
 app.whenReady().then(() => {

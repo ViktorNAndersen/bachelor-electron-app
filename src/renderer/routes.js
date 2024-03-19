@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('.router').click(function() {
+    $(document).on('click', '.router', function() {
         const route = $(this).data('route');
         if (route) {
             console.log("Requesting route:", route);
@@ -9,5 +9,8 @@ $(document).ready(function() {
 
     window.electron.receive('route-response', (content) => {
         $('#content').html(content);
+
+        // If you need to make sure something runs right after the content is loaded,
+        // you could also trigger custom events or call functions here.
     });
 });
