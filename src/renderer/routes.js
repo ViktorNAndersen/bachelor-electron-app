@@ -7,10 +7,15 @@ $(document).ready(function() {
         }
     });
 
-    window.electron.receive('route-response', (content) => {
-        $('#content').html(content);
-
-        // If you need to make sure something runs right after the content is loaded,
-        // you could also trigger custom events or call functions here.
+    window.electron.receive('route-response', (data) => {
+        $('#content').html(data.content);
+        
+        if (data.scriptPath) {
+            const script = document.createElement('script');
+            script.src = data.scriptPath;
+            script.onload = () => console.log(`${data.scriptPath} was loaded successfully`);
+            script.onerror = () => console.error(`Failed to load script: ${data.scriptPath}`);
+            document.body.appendChild(script); // Append the script tag to the body or head as needed
+        }
     });
 });

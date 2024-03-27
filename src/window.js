@@ -17,6 +17,11 @@ function createWindow() {
 
 }
 
+const routeScriptMap = {
+    'locations/index.html': 'locations.js',
+    'locations/show.html': 'locations.js',
+}
+
 function handleRoute(route, win) {
     const routePath = path.join(__dirname, 'renderer', route);
     fs.readFile(routePath, 'utf-8', (error, content) => {
@@ -24,9 +29,10 @@ function handleRoute(route, win) {
             console.error('Error reading file:', error);
             return;
         }
-        win.webContents.send('route-response', content);
+        const scriptPath = routeScriptMap[route] ? `javascript/${routeScriptMap[route]}` : "";
+
+        win.webContents.send('route-response', { content, scriptPath });
     });
 }
-
 
 module.exports = { createWindow, handleRoute };
