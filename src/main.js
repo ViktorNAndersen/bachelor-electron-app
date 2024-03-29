@@ -50,9 +50,6 @@ app.whenReady().then(() => {
                     event.sender.send('data-response', { error: 'Invalid type' });
                     return;
             }
-            console.log(responseData)
-            console.log(data)
-            console.log(JSON.stringify(responseData, null, 2)); // This can help identify serialization issues
             event.sender.send('data-response', { data: responseData });
         } catch (error) {
             console.error("Error fetching: ", data, error);

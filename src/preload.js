@@ -12,7 +12,14 @@ contextBridge.exposeInMainWorld(
         receive: (channel, func) => {
             let validChannels = ["route-response", "data-response"];
             if (validChannels.includes(channel)) {
-                ipcRenderer.on(channel, (event, ...args) => func(...args));
+                const wrapper = (event, ...args) => func(...args)
+                ipcRenderer.on(channel, wrapper);
+            }
+        },
+        removeAllListeners: (channel) => {
+            let validChannels = ["route-response", "data-response"];
+            if (validChannels.includes(channel)) {
+                ipcRenderer.removeAllListeners(channel);
             }
         }
     }
