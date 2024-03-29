@@ -20,6 +20,10 @@ function createWindow() {
 const routeScriptMap = {
     'locations/index.html': 'locations.js',
     'locations/show.html': 'locations.js',
+    'orders/index.html': 'orders.js',
+    'orders/show.html': 'orders.js',
+    'users/index.html': 'users.js',
+    'users/show.html': 'users.js',
 }
 
 function handleRoute(route, win) {
