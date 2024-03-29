@@ -26,7 +26,7 @@ const routeScriptMap = {
     'users/show.html': 'users.js',
 }
 
-function handleRoute(route, win) {
+function handleRoute(route, win, id=null) {
     const routePath = path.join(__dirname, 'renderer', route);
     fs.readFile(routePath, 'utf-8', (error, content) => {
         if (error) {
@@ -35,7 +35,7 @@ function handleRoute(route, win) {
         }
         const scriptPath = routeScriptMap[route] ? `javascript/${routeScriptMap[route]}` : "";
 
-        win.webContents.send('route-response', { content, scriptPath });
+        win.webContents.send('route-response', { content, scriptPath, id});
     });
 }
 

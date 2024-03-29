@@ -15,8 +15,10 @@ app.whenReady().then(() => {
     createWindow()
 
     ipcMain.on('request-route', (event, route) => {
-        if (route in allowedRoutes) {
-            handleRoute(allowedRoutes[route], BrowserWindow.fromWebContents(event.sender));
+        const [baseRoute, id] = route.split('/');
+
+        if (baseRoute in allowedRoutes) {
+            handleRoute(allowedRoutes[baseRoute], BrowserWindow.fromWebContents(event.sender), id);
         } else {
             console.error('Route not allowed:', route);
         }
