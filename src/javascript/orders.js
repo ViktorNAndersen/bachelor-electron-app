@@ -68,7 +68,6 @@ function fillOrder(order) {
         `;
     });
 
-    const statusBadgeClass = order.status === 'pending' ? 'badge-warning' : 'badge-success';
     detailsContainer.html(`
         <div class="card shadow-sm">
             <div class="card-header bg-dark-subtle">
