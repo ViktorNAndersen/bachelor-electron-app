@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const { createWindow, handleRoute, navigate } = require('./window');
-const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder } = require('./api/API');
+const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts } = require('./api/API');
 
 const allowedRoutes = {
     'location': 'locations/show.html',
@@ -9,6 +9,7 @@ const allowedRoutes = {
     'orders': 'orders/index.html',
     'user': 'users/show.html',
     'users': 'users/index.html',
+    'new_order': 'orders/new.html',
 };
 
 app.whenReady().then(() => {
@@ -46,6 +47,9 @@ app.whenReady().then(() => {
                     break;
                 case 'orders':
                     responseData = await fetchOrders();
+                    break;
+                case 'products':
+                    responseData = await fetchProducts();
                     break;
                 default:
                     console.error('Invalid type:', type);

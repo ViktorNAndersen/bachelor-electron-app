@@ -105,7 +105,6 @@ function fillUnits(units) {
     units.forEach(unit => {
         unitsList.append(`
             <tr>
-                <td>${unit.id}</td>
                 <td>${unit.name}</td>
                 <td>${unit.address}</td>
                 <td>
@@ -123,7 +122,6 @@ function fillSuppliers(suppliers) {
     suppliers.forEach(supplier => {
         suppliersList.append(`
             <tr>
-                <td>${supplier.id}</td>
                 <td>${supplier.name}</td>
                 <td>${supplier.address}</td>
                 <td>

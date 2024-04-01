@@ -24,6 +24,7 @@ const routeScriptMap = {
     'orders/show.html': 'orders.js',
     'users/index.html': 'users.js',
     'users/show.html': 'users.js',
+    'orders/new.html': 'new.js',
 }
 
 function handleRoute(route, win, id=null) {

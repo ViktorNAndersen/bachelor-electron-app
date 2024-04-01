@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { API_USERS_PATH, API_LOCATIONS_PATH, API_ORDERS_PATH } = require( "../common/constants");
+const { API_USERS_PATH, API_LOCATIONS_PATH, API_ORDERS_PATH, API_PRODUCTS_PATH } = require( "../common/constants");
 
 function fetchUsers() {
     return axios.get(API_USERS_PATH)
@@ -37,4 +37,10 @@ function fetchOrder(order) {
         .catch(error => { throw new Error(error.response.data); });
 }
 
-module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder};
+function fetchProducts() {
+    return axios.get(API_PRODUCTS_PATH)
+        .then(response => response.data)
+        .catch(error => { throw new Error(error.response.data); });
+}
+
+module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts};
