@@ -33,3 +33,19 @@ function fillProductForm(products) {
         container.append(productInputHtml);
     });
 }
+
+$('#create-order-form').on('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting through the browser
+
+    let orderData = {products: []};
+
+    $('#products-container .form-group input').each(function () {
+        const productId = $(this).attr('id').replace('product-', '');
+        const amount = $(this).val();
+
+        if (amount > 0) { // Assuming you only want to include products with a specified amount
+            orderData.products.push({id: productId, amount: amount});
+        }
+    });
+    console.log(orderData);
+});
