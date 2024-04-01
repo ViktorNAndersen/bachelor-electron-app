@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld(
             if (validChannels.includes(channel)) {
                 ipcRenderer.removeAllListeners(channel);
             }
-        }
+        },
+        getEnv: (varName) => process.env[varName]
     }
 );

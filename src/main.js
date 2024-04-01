@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
-const { createWindow, handleRoute, navigate } = require('./window');
+const { createWindow, handleRoute} = require('./window');
 const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts } = require('./api/API');
 
 const allowedRoutes = {
