@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    //Find script with temp class and find the data-id attribute of it
     const id = $('.temp').data('id');
     if (id) {
         orders_show(id);
