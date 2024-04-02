@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const { createWindow, handleRoute} = require('./window');
-const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts } = require('./api/API');
+const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder } = require('./api/API');
 
 const allowedRoutes = {
     'location': 'locations/show.html',
@@ -68,6 +68,16 @@ app.whenReady().then(() => {
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
+
+    ipcMain.on('new-order', async (event, orderData) => {
+        try {
+            const response = await newOrder(orderData);
+            event.reply('order-response', { success: true, data: response.data });
+        } catch (error) {
+            console.error('Order creation failed:', error);
+            event.reply('order-response', { success: false, error: error.toString() });
+        }
+    });
 })
 
 app.on('window-all-closed', () => {

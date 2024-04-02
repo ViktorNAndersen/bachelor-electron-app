@@ -43,4 +43,10 @@ function fetchProducts() {
         .catch(error => { throw new Error(error.response.data); });
 }
 
-module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts};
+function newOrder(params) {
+    return axios.post(API_ORDERS_PATH, params)
+        .then(response => response.data)
+        .catch(error => { throw new Error(error.response.data); });
+}
+
+module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder};

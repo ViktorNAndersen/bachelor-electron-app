@@ -37,15 +37,36 @@ function fillProductForm(products) {
 $('#create-order-form').on('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting through the browser
 
-    let orderData = {products: []};
+    let user_id = window.electron.getEnv('CURRENT_USER_ID');
+    console.log(user_id)
+    let orderData = {
+        order: {
+            ordered_by_id: user_id,
+            order_items_attributes: []
+        }
+    };
 
-    $('#products-container .form-group input').each(function () {
+    $('#products-container .form-group input').each(function() {
         const productId = $(this).attr('id').replace('product-', '');
-        const amount = $(this).val();
+        const quantity = $(this).val();
 
-        if (amount > 0) { // Assuming you only want to include products with a specified amount
-            orderData.products.push({id: productId, amount: amount});
+        if (quantity > 0) { // Assuming you only want to include products with a specified quantity
+            orderData.order.order_items_attributes.push({
+                product_id: productId,
+                quantity: quantity
+            });
         }
     });
-    console.log(orderData);
+
+    window.electron.send('new-order', orderData);
+
+    window.electron.receive('order-response', (response) => {
+        if (response.success) {
+            console.log('Order successful:', response.data);
+            // Handle successful order (e.g., show a message to the user)
+        } else {
+            console.error('Order failed:', response.error);
+            // Handle order failure (e.g., display an error message)
+        }
+    });
 });
