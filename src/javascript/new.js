@@ -58,14 +58,4 @@ $('#create-order-form').on('submit', function(event) {
     });
 
     window.electron.send('new-order', orderData);
-
-    window.electron.receive('order-response', (response) => {
-        if (response.success) {
-            console.log('Order successful:', response.data);
-            // Handle successful order (e.g., show a message to the user)
-        } else {
-            console.error('Order failed:', response.error);
-            // Handle order failure (e.g., display an error message)
-        }
-    });
 });

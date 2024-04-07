@@ -10,14 +10,14 @@ contextBridge.exposeInMainWorld(
             }
         },
         receive: (channel, func) => {
-            let validChannels = ["route-response", "data-response", "order-response", "new-order-response", "update-order-response", "delete-order-response"];
+            let validChannels = ["route-response", "data-response"];
             if (validChannels.includes(channel)) {
                 const wrapper = (event, ...args) => func(...args)
                 ipcRenderer.on(channel, wrapper);
             }
         },
         removeAllListeners: (channel) => {
-            let validChannels = ["route-response", "data-response", "order-response", "new-order-response", "update-order-response", "delete-order-response"];
+            let validChannels = ["route-response", "data-response"];
             if (validChannels.includes(channel)) {
                 ipcRenderer.removeAllListeners(channel);
             }

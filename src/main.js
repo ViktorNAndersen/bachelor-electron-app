@@ -72,31 +72,28 @@ app.whenReady().then(() => {
     //ORDERS CRUD
     ipcMain.on('new-order', async (event, orderData) => {
         try {
-            const response = await newOrder(orderData);
-            event.reply('order-response', { success: true, data: response.data });
+            await newOrder(orderData);
+            handleRoute('orders/index.html', BrowserWindow.fromWebContents(event.sender), null);
         } catch (error) {
-            console.error('Order creation failed:', error);
-            event.reply('order-response', { success: false, error: error.toString() });
+            console.error('Order creation failed');
         }
     });
 
     ipcMain.on('update-order', async (event, { id, status }) => {
         try {
-            const response = await updateOrderStatus(id, status);
-            event.reply('order-update-response', { success: true, data: response });
+            await updateOrderStatus(id, status);
+            handleRoute('orders/index.html', BrowserWindow.fromWebContents(event.sender), id);
         } catch (error) {
-            console.error('Order update failed:', error);
-            event.reply('order-update-response', { success: false, error: error.toString() });
+            console.error('Order update failed');
         }
     });
 
     ipcMain.on('delete-order', async (event, { id }) => {
         try {
-            const response = await deleteOrder(id);
-            event.reply('order-delete-response', { success: true, data: response });
+            await deleteOrder(id);
+            handleRoute('orders/index.html', BrowserWindow.fromWebContents(event.sender), id);
         } catch (error) {
-            console.error('Order deletion failed:', error);
-            event.reply('order-delete-response', { success: false, error: error.toString() });
+            console.error('Order deletion failed');
         }
     });
 })

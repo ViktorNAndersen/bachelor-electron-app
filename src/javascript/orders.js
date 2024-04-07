@@ -126,26 +126,10 @@ function fillOrder(order) {
 
 function updateOrderStatus(id, newStatus) {
     window.electron.send('update-order', { id: id, status: newStatus });
-
-    window.electron.receive('order-update-response', (response) => {
-        if (response.error) {
-            console.error('Error updating order status:', response.error);
-        } else {
-            console.log('Order status updated:', response.data);
-        }
-    });
 }
 
 function deleteOrder(id) {
     window.electron.send('delete-order', { id: id });
-
-    window.electron.receive('order-delete-response', (response) => {
-        if (response.error) {
-            console.error('Error deleting order:', response.error);
-        } else {
-            console.log('Order deleted:', response.data);
-        }
-    });
 }
 
 
