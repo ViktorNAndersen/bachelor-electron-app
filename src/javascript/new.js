@@ -38,7 +38,6 @@ $('#create-order-form').on('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting through the browser
 
     let user_id = window.electron.getEnv('CURRENT_USER_ID');
-    console.log(user_id)
     let orderData = {
         order: {
             ordered_by_id: user_id,

@@ -49,4 +49,17 @@ function newOrder(params) {
         .catch(error => { throw new Error(error.response.data); });
 }
 
-module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder};
+function updateOrderStatus(order, status) {
+    return axios.put(`${API_ORDERS_PATH}/${order}`, { status })
+        .then(response => response.data)
+        .catch(error => { throw new Error(error.response.data); });
+}
+
+function deleteOrder(order) {
+    return axios.delete(`${API_ORDERS_PATH}/${order}`)
+        .then(response => response.data)
+        .catch(error => { throw new Error(error.response.data); });
+
+}
+
+module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder };

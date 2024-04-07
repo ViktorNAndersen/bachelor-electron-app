@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const { createWindow, handleRoute} = require('./window');
-const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder } = require('./api/API');
+const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder } = require('./api/API');
 
 const allowedRoutes = {
     'location': 'locations/show.html',
@@ -69,6 +69,7 @@ app.whenReady().then(() => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
 
+    //ORDERS CRUD
     ipcMain.on('new-order', async (event, orderData) => {
         try {
             const response = await newOrder(orderData);
@@ -76,6 +77,26 @@ app.whenReady().then(() => {
         } catch (error) {
             console.error('Order creation failed:', error);
             event.reply('order-response', { success: false, error: error.toString() });
+        }
+    });
+
+    ipcMain.on('update-order', async (event, { id, status }) => {
+        try {
+            const response = await updateOrderStatus(id, status);
+            event.reply('order-update-response', { success: true, data: response });
+        } catch (error) {
+            console.error('Order update failed:', error);
+            event.reply('order-update-response', { success: false, error: error.toString() });
+        }
+    });
+
+    ipcMain.on('delete-order', async (event, { id }) => {
+        try {
+            const response = await deleteOrder(id);
+            event.reply('order-delete-response', { success: true, data: response });
+        } catch (error) {
+            console.error('Order deletion failed:', error);
+            event.reply('order-delete-response', { success: false, error: error.toString() });
         }
     });
 })

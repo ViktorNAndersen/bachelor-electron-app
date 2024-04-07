@@ -56,6 +56,14 @@ function fillOrder(order) {
     const detailsContainer = $('#order-details');
     let orderItemsHtml = '';
 
+    const updateButtonHtml = order.status === 'in_progress' ? `
+        <button id="updateOrderButton" class="btn btn-success me-3">Mark as Completed</button>
+    ` : '';
+
+    const deleteButtonHtml = `
+        <button id="deleteOrderButton" class="btn btn-danger">Delete Order</button>
+    `;
+
     order.order_items.forEach(item => {
         orderItemsHtml += `
             <tr>
@@ -96,9 +104,48 @@ function fillOrder(order) {
                 Ordered by: <span class="ml-2">User #${order.ordered_by_id}</span><br>
                 Order Updated on: ${new Date(order.updated_at).toLocaleDateString()}
             </div>
+            <div class="order-actions d-flex justify-content-end">
+                ${updateButtonHtml} ${deleteButtonHtml}
+            </div>
         </div>
     `);
+
+    if (order.status === 'in_progress') {
+        $('#updateOrderButton').on('click', () => {
+            console.log("clicked update")
+            updateOrderStatus(order.id, 'completed');
+        });
+    }
+
+    $('#deleteOrderButton').on('click', () => {
+        deleteOrder(order.id);
+        console.log("clicked delete")
+    });
 }
 
+
+function updateOrderStatus(id, newStatus) {
+    window.electron.send('update-order', { id: id, status: newStatus });
+
+    window.electron.receive('order-update-response', (response) => {
+        if (response.error) {
+            console.error('Error updating order status:', response.error);
+        } else {
+            console.log('Order status updated:', response.data);
+        }
+    });
+}
+
+function deleteOrder(id) {
+    window.electron.send('delete-order', { id: id });
+
+    window.electron.receive('order-delete-response', (response) => {
+        if (response.error) {
+            console.error('Error deleting order:', response.error);
+        } else {
+            console.log('Order deleted:', response.data);
+        }
+    });
+}
 
 
