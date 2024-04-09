@@ -73,7 +73,7 @@ app.whenReady().then(() => {
     ipcMain.on('new-order', async (event, orderData) => {
         try {
             await newOrder(orderData);
-            handleRoute('orders/index.html', BrowserWindow.fromWebContents(event.sender), null);
+            await handleRoute('orders/index.html', BrowserWindow.fromWebContents(event.sender), null);
         } catch (error) {
             console.error('Order creation failed');
         }
@@ -82,7 +82,7 @@ app.whenReady().then(() => {
     ipcMain.on('update-order', async (event, { id, status }) => {
         try {
             await updateOrderStatus(id, status);
-            handleRoute('orders/index.html', BrowserWindow.fromWebContents(event.sender), id);
+            await handleRoute('orders/index.html', BrowserWindow.fromWebContents(event.sender), null);
         } catch (error) {
             console.error('Order update failed');
         }
@@ -91,7 +91,7 @@ app.whenReady().then(() => {
     ipcMain.on('delete-order', async (event, { id }) => {
         try {
             await deleteOrder(id);
-            handleRoute('orders/index.html', BrowserWindow.fromWebContents(event.sender), id);
+            await handleRoute('orders/index.html', BrowserWindow.fromWebContents(event.sender), null);
         } catch (error) {
             console.error('Order deletion failed');
         }

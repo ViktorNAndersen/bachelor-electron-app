@@ -36,6 +36,7 @@ function fillProductForm(products) {
 
 $('#create-order-form').on('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting through the browser
+    confirm("Are you sure you want to create new order?")
 
     let user_id = window.electron.getEnv('CURRENT_USER_ID');
     let orderData = {

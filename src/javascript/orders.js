@@ -112,12 +112,14 @@ function fillOrder(order) {
 
     if (order.status === 'in_progress') {
         $('#updateOrderButton').on('click', () => {
+            confirm("Are you sure you want to do update this order?")
             console.log("clicked update")
             updateOrderStatus(order.id, 'completed');
         });
     }
 
     $('#deleteOrderButton').on('click', () => {
+        confirm("Are you sure you want to delete this order?")
         deleteOrder(order.id);
         console.log("clicked delete")
     });
