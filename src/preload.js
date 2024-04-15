@@ -22,6 +22,6 @@ contextBridge.exposeInMainWorld(
                 ipcRenderer.removeAllListeners(channel);
             }
         },
-        getEnv: (varName) => process.env[varName]
+        getEnv: (varName) => process.env[varName],
     }
 );
