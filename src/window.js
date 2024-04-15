@@ -16,7 +16,6 @@ function createWindow() {
 
     win.loadFile('src/index.html');
     win.webContents.openDevTools()
-
 }
 
 const routeScriptMap = {

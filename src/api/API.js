@@ -1,23 +1,9 @@
 const axios = require("axios");
 const Store = require("electron-store");
 const { onlineStatus } = require('./utils');
-const queueManager = require('../QueueManager');
 const { API_USERS_PATH, API_LOCATIONS_PATH, API_ORDERS_PATH, API_PRODUCTS_PATH } = require("../common/constants");
 
 const store = new Store();
-
-const cacheKeyToApiPath = {
-    users: '/api/v1/users',
-    orders: '/api/v1/orders',
-    locations: '/api/v1/locations'
-};
-
-async function fetchUpdatedData(cacheKey) {
-    const url = cacheKeyToApiPath[cacheKey];
-    if (!url) throw new Error("Invalid cache key");
-    const response = await axios.get(url);
-    return response.data;
-}
 
 async function fetchData(url, cacheKey) {
     try {
@@ -49,7 +35,6 @@ async function postData(url, params) {
             const response = await axios.post(url, params);
             return response.data;
         } else {
-            await queueManager.enqueue({ type: 'post', url, data: params });
             new Error('No network connection. Action queued.');
         }
     } catch (error) {
@@ -63,7 +48,6 @@ async function putData(url, data) {
             const response = await axios.put(url, data);
             return response.data;
         } else {
-            await queueManager.enqueue({ type: 'put', url, data });
             new Error('No network connection. Action queued.');
         }
     } catch (error) {
@@ -77,11 +61,36 @@ async function deleteData(url) {
             const response = await axios.delete(url);
             return response.data;
         } else {
-            await queueManager.enqueue({ type: 'delete', url });
             new Error('No network connection. Action queued.');
         }
     } catch (error) {
         throw new Error(error.message || `Error: ${error.response?.data}, Status Code: ${error.response?.status}`);
+    }
+}
+
+async function seedCache()  {
+    if (onlineStatus()) { // Ensure you have a method to reliably check the network status
+        try {
+            await fetchUsers();
+            await fetchLocations();
+            const orders = await fetchOrders();
+            await fetchProducts();
+            console.log('Cache seeded with users, locations, products.');
+
+            await Promise.all(orders.map(async (order) => {
+                try {
+                    const detailedOrder = await fetchOrder(order.id);
+                    console.log(`Detailed data fetched for order ${order.id}`);
+                } catch (error) {
+                    console.error(`Failed to fetch detailed data for order ${order.id}:`, error);
+                }
+            }));
+            console.log('All detailed orders data fetched.');
+        } catch (error) {
+            console.error('Failed to seed cache:', error);
+        }
+    } else {
+        console.log('No internet connection - cache not seeded');
     }
 }
 
@@ -96,4 +105,4 @@ function newOrder(params) { return postData(API_ORDERS_PATH, params); }
 function updateOrderStatus(order, status) { return putData(`${API_ORDERS_PATH}/${order}`, { status }); }
 function deleteOrder(order) { return deleteData(`${API_ORDERS_PATH}/${order}`); }
 
-module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder };
+module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder, seedCache};

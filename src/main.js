@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
-const QueueManager = require('./QueueManager');
 const { createWindow, handleRoute} = require('./window');
-const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder } = require('./api/API');
+const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder, seedCache } = require('./api/API');
 
 const allowedRoutes = {
     'location': 'locations/show.html',
@@ -15,6 +14,7 @@ const allowedRoutes = {
 
 app.whenReady().then(() => {
     createWindow()
+    seedCache();
 
     ipcMain.on('request-route', (event, route) => {
         const [baseRoute, id] = route.split('/');
@@ -70,7 +70,6 @@ app.whenReady().then(() => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
 
-    //ORDERS CRUD
     ipcMain.on('new-order', async (event, orderData) => {
         try {
             await newOrder(orderData);
@@ -98,6 +97,7 @@ app.whenReady().then(() => {
         }
     });
 })
+
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
