@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    window.addEventListener('online', () => handleNetworkStatusChange(true));
+    window.addEventListener('offline', () => handleNetworkStatusChange(false));
+
     $(document).on('click', '.router', function () {
         const route = $(this).data('route');
         if (route) {
@@ -10,8 +13,6 @@ $(document).ready(function() {
     window.electron.receive('route-response', (data) => {
         window.electron.removeAllListeners('data-response');
         $('.temp').remove();
-        handleNetworkStatusChange(navigator.onLine)
-
         $('#content').html(data.content);
         if (data.scriptPath) {
             createScript(data.scriptPath, data.id);
@@ -37,4 +38,7 @@ function handleNetworkStatusChange(status) {
     statusElement.text(status ? 'Online' : 'Offline');
     statusElement.removeClass('text-danger text-success');
     statusElement.addClass(status ? 'text-success' : 'text-danger');
+    if(status) {
+        window.electron.send('process-queue');
+    }
 }

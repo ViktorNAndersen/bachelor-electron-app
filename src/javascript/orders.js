@@ -5,6 +5,12 @@ $(document).ready(function() {
     } else {
         orders_index();
     }
+
+    window.electron.send('get-queue');
+
+    window.electron.receive('queue-updated', (queue) => {
+        displayQueue(queue);
+    });
 });
 
 function orders_index() {
@@ -132,6 +138,46 @@ function updateOrderStatus(id, newStatus) {
 
 function deleteOrder(id) {
     window.electron.send('delete-order', { id: id });
+}
+
+function displayQueue(queue) {
+    const queueContainer = document.getElementById('queue-container');
+    queueContainer.innerHTML = ''; // Clear previous contents
+
+    if (queue.length === 0) {
+        queueContainer.innerHTML = '<div class="alert alert-info">No pending actions.</div>';
+        return;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const cardHeader = document.createElement('div');
+    cardHeader.className = 'card-header';
+    cardHeader.textContent = 'Pending Actions';
+    card.appendChild(cardHeader);
+
+    const listGroup = document.createElement('ul');
+    listGroup.className = 'list-group list-group-flush';
+
+    queue.forEach((item) => {
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+
+        const actionDescription = document.createElement('p');
+        actionDescription.className = 'mb-1';
+        actionDescription.textContent = `Action: ${item.action}`;
+
+        const dataDescription = document.createElement('small');
+        dataDescription.textContent = `URL: ${item.data.url} - Data: ${JSON.stringify(item.data.params)}`;
+
+        listItem.appendChild(actionDescription);
+        listItem.appendChild(dataDescription);
+        listGroup.appendChild(listItem);
+    });
+
+    card.appendChild(listGroup);
+    queueContainer.appendChild(card);
 }
 
 

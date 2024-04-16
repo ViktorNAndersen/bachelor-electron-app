@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const { createWindow, handleRoute} = require('./window');
 const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder, seedCache } = require('./api/API');
+const { queueManager } = require('./api/QueueManager');
 
 const allowedRoutes = {
     'location': 'locations/show.html',

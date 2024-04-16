@@ -1,5 +1,6 @@
 const axios = require("axios");
 const Store = require("electron-store");
+const queueManager = require("./QueueManager");
 const { onlineStatus } = require('./utils');
 const { API_USERS_PATH, API_LOCATIONS_PATH, API_ORDERS_PATH, API_PRODUCTS_PATH } = require("../common/constants");
 
@@ -35,20 +36,20 @@ async function postData(url, params) {
             const response = await axios.post(url, params);
             return response.data;
         } else {
-            new Error('No network connection. Action queued.');
+            queueManager.enqueue('post', { url, params })
         }
     } catch (error) {
         throw new Error(`Error: ${error.response.data}, Status Code: ${error.response.status}`);
     }
 }
 
-async function putData(url, data) {
+async function putData(url, params) {
     try {
         if (onlineStatus()) {
-            const response = await axios.put(url, data);
+            const response = await axios.put(url, params);
             return response.data;
         } else {
-            new Error('No network connection. Action queued.');
+            queueManager.enqueue('put', { url, params })
         }
     } catch (error) {
         throw new Error(error.message || `Error: ${error.response?.data}, Status Code: ${error.response?.status}`);
@@ -61,7 +62,7 @@ async function deleteData(url) {
             const response = await axios.delete(url);
             return response.data;
         } else {
-            new Error('No network connection. Action queued.');
+            queueManager.enqueue('delete', { url })
         }
     } catch (error) {
         throw new Error(error.message || `Error: ${error.response?.data}, Status Code: ${error.response?.status}`);
