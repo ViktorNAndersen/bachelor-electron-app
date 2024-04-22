@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    window.addEventListener('online', () => handleNetworkStatusChange(true));
-    window.addEventListener('offline', () => handleNetworkStatusChange(false));
+    window.addEventListener('online', () => window.electron.send('check-api-status'));
+    window.addEventListener('offline', () => window.electron.send('check-api-status'));
 
     $(document).on('click', '.router', function () {
         const route = $(this).data('route');
@@ -16,6 +16,14 @@ $(document).ready(function() {
         $('#content').html(data.content);
         if (data.scriptPath) {
             createScript(data.scriptPath, data.id);
+        }
+    });
+
+    window.electron.receive('api-status', (event) => {
+        if (event.status) {
+            handleNetworkStatusChange(true)
+        } else {
+            handleNetworkStatusChange(false)
         }
     });
 });

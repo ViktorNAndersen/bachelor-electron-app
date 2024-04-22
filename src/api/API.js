@@ -1,14 +1,22 @@
 const axios = require("axios");
 const Store = require("electron-store");
 const queueManager = require("./QueueManager");
-const { onlineStatus } = require('./utils');
-const { API_USERS_PATH, API_LOCATIONS_PATH, API_ORDERS_PATH, API_PRODUCTS_PATH } = require("../common/constants");
+const { API_USERS_PATH, API_LOCATIONS_PATH, API_ORDERS_PATH, API_PRODUCTS_PATH, API_PING_PATH } = require("../common/constants");
 
 const store = new Store();
 
+async function checkApiStatus(){
+    try {
+        const response = await axios.get(API_PING_PATH);
+        return response.status === 200;
+    } catch (error) {
+        return false;
+    }
+}
+
 async function fetchData(url, cacheKey) {
     try {
-        if (onlineStatus()) {
+        if (await checkApiStatus()) {
             const response = await axios.get(url);
             const data = response.data;
             store.set(cacheKey, data);
@@ -32,7 +40,7 @@ async function fetchData(url, cacheKey) {
 
 async function postData(url, params) {
     try {
-        if (onlineStatus()) {
+        if (await checkApiStatus()) {
             const response = await axios.post(url, params);
             return response.data;
         } else {
@@ -45,7 +53,7 @@ async function postData(url, params) {
 
 async function putData(url, params) {
     try {
-        if (onlineStatus()) {
+        if (await checkApiStatus()) {
             const response = await axios.put(url, params);
             return response.data;
         } else {
@@ -58,7 +66,7 @@ async function putData(url, params) {
 
 async function deleteData(url) {
     try {
-        if (onlineStatus()) {
+        if (await checkApiStatus()) {
             const response = await axios.delete(url);
             return response.data;
         } else {
@@ -70,7 +78,8 @@ async function deleteData(url) {
 }
 
 async function seedCache()  {
-    if (onlineStatus()) { // Ensure you have a method to reliably check the network status
+    queueManager.clearQueue()
+    if (await checkApiStatus()) { // Ensure you have a method to reliably check the network status
         try {
             await fetchUsers();
             await fetchLocations();
@@ -106,4 +115,4 @@ function newOrder(params) { return postData(API_ORDERS_PATH, params); }
 function updateOrderStatus(order, status) { return putData(`${API_ORDERS_PATH}/${order}`, { status }); }
 function deleteOrder(order) { return deleteData(`${API_ORDERS_PATH}/${order}`); }
 
-module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder, seedCache};
+module.exports = { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder, seedCache, checkApiStatus};

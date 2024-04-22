@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const { createWindow, handleRoute} = require('./window');
-const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder, seedCache } = require('./api/API');
+const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder, seedCache, checkApiStatus } = require('./api/API');
 const { queueManager } = require('./api/QueueManager');
 
 const allowedRoutes = {
@@ -16,6 +16,9 @@ const allowedRoutes = {
 app.whenReady().then(() => {
     createWindow()
     seedCache();
+
+    checkApi();
+    setAPICheckInterval();
 
     ipcMain.on('request-route', (event, route) => {
         const [baseRoute, id] = route.split('/');
@@ -97,9 +100,37 @@ app.whenReady().then(() => {
             console.error('Order deletion failed');
         }
     });
-})
 
+    ipcMain.on('check-api-status' , async (event) => {
+        try {
+            const status = await checkApiStatus();
+            event.sender.send('api-status', { status: status });
+        } catch (error) {
+            console.error('Error checking API status:', error);
+            event.sender.send('api-status', { status: false });
+        }
+    });
+})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
 })
+
+function setAPICheckInterval(){
+    setInterval( () => checkApi(), 5000);
+}
+
+async function checkApi(){
+    try {
+        const status = await checkApiStatus();
+        // Send status to all renderer windows
+        BrowserWindow.getAllWindows().forEach(win => {
+            win.webContents.send('api-status', { status: status });
+        });
+    } catch (error) {
+        console.error('Error checking API status:', error);
+        BrowserWindow.getAllWindows().forEach(win => {
+            win.webContents.send('api-status', { status: false });
+        });
+    }
+}

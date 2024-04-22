@@ -17,8 +17,12 @@ class QueueManager {
 
     setupIpcListeners() {
         ipcMain.on('get-queue', (event) => {
-            console.log("GOT QUEUE")
             event.reply('queue-updated', this.getQueue());
+        });
+
+        ipcMain.on('clear-queue', (event) => {
+            this.clearQueue();
+            event.reply('queue-cleared', { success: true });
         });
     }
 
@@ -30,6 +34,12 @@ class QueueManager {
 
     getQueue() {
         return this.queue;
+    }
+
+    clearQueue() {
+        this.queue = []; // Clear the queue array
+        this.store.set('actionQueue', this.queue); // Update the store
+        console.log("Queue cleared");
     }
 }
 
