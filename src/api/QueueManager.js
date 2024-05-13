@@ -37,6 +37,7 @@ class QueueManager {
     }
 
     clearQueue() {
+        //this.store.clear(); // Clear the store
         this.queue = []; // Clear the queue array
         this.store.set('actionQueue', this.queue); // Update the store
         console.log("Queue cleared");

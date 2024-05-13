@@ -4,11 +4,31 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder -mwl --dir",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build": {
+    "appId": "your.id",
+    "productName": "YourApp",
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "category": "your.app.category.type",
+      "icon": "icons/mac/icon.icns"
+    },
+    "win": {
+      "icon": "icons/win/icon.ico"
+    },
+    "linux": {
+      "icon": "icons/linux"
+    }
   },
   "license": "MIT",
   "devDependencies": {
-    "electron": "^29.1.1"
+    "electron": "^29.1.1",
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "axios": "^1.6.7",

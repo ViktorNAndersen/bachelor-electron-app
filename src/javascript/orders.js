@@ -107,7 +107,7 @@ function fillOrder(order) {
                 </table>
             </div>
             <div class="card-footer text-muted">
-                Ordered by: <span class="ml-2">User #${order.ordered_by_id}</span><br>
+                Ordered by: <span class="ml-2">User #${order.ordered_by_id}</span><br>   
                 Order Updated on: ${new Date(order.updated_at).toLocaleDateString()}
             </div>
             <div class="order-actions d-flex justify-content-end">

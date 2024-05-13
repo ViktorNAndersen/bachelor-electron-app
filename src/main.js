@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, session } = require('electron')
 const { createWindow, handleRoute} = require('./window');
 const { fetchUsers, fetchLocations, fetchOrders, fetchUser, fetchLocation, fetchOrder, fetchProducts, newOrder, updateOrderStatus, deleteOrder, seedCache, checkApiStatus } = require('./api/API');
 const { queueManager } = require('./api/QueueManager');
